@@ -49,7 +49,6 @@ public class VeterinarianFormController {
         }
         try {
             if (selectedVeterinarian != null) {
-                // Edit mode: update existing veterinarian
                 selectedVeterinarian.setFirstName(firstNameField.getText());
                 selectedVeterinarian.setLastName(lastNameField.getText());
                 selectedVeterinarian.setSpecialization(specializationField.getText());
@@ -57,7 +56,6 @@ public class VeterinarianFormController {
                 selectedVeterinarian.setEmail(emailField.getText());
                 showAlert("Veterinarian updated successfully");
             } else {
-                // Add mode: create new veterinarian
                 dataService.addVeterinarian(
                     firstNameField.getText(),
                     lastNameField.getText(),
