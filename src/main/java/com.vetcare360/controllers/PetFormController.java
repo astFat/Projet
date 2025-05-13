@@ -22,7 +22,6 @@ public class PetFormController {
     public void initialize() {
         dataService = DataService.getInstance();
         
-        // Set up owner combo box
         ownerComboBox.getItems().addAll(dataService.getAllOwners());
         ownerComboBox.setCellFactory(lv -> new ListCell<Owner>() {
             @Override
@@ -33,14 +32,12 @@ public class PetFormController {
         });
         ownerComboBox.setButtonCell(ownerComboBox.getCellFactory().call(null));
 
-        // If editing existing pet, populate fields
         if (selectedPet != null) {
             formTitleLabel.setText("Edit Pet");
             nameField.setText(selectedPet.getName());
             speciesField.setText(selectedPet.getSpecies());
             breedField.setText(selectedPet.getBreed());
             ageField.setText(String.valueOf(selectedPet.getAge()));
-            // Find and select the owner
             for (Owner owner : ownerComboBox.getItems()) {
                 if ((owner.getFirstName() + " " + owner.getLastName()).equals(selectedPet.getOwnerName())) {
                     ownerComboBox.setValue(owner);
@@ -78,7 +75,6 @@ public class PetFormController {
                 String ownerName = selectedOwner.getFirstName() + " " + selectedOwner.getLastName();
                 
                 if (selectedPet != null) {
-                    // Update existing pet
                     selectedPet.setName(name);
                     selectedPet.setSpecies(species);
                     selectedPet.setBreed(breed);
@@ -86,7 +82,6 @@ public class PetFormController {
                     selectedPet.setOwnerName(ownerName);
                     showAlert("Pet updated successfully");
                 } else {
-                    // Add new pet
                     dataService.addPet(name, species, breed, age, ownerName);
                     showAlert("Pet added successfully");
                 }
