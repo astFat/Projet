@@ -32,12 +32,10 @@ public class OwnerListController {
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
 
-        // Add double-click handler for viewing details
         ownerTable.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 Owner selected = ownerTable.getSelectionModel().getSelectedItem();
                 if (selected != null) {
-                    // Optionally, set a static field or use a shared service to pass the selected owner
                     com.vetcare360.controllers.OwnerDetailsController.selectedOwner = selected;
                     Navigator.navigateTo("OwnerDetails.fxml");
                 }
@@ -68,7 +66,6 @@ public class OwnerListController {
             return;
         }
 
-        // Store the selected owner for editing
         Navigator.navigateTo("NewOwnerForm.fxml");
     }
 
@@ -87,7 +84,6 @@ public class OwnerListController {
 
         if (confirm.showAndWait().get() == ButtonType.OK) {
             try {
-                // Since we don't have a direct delete method, we'll need to remove from the list
                 ownerTable.getItems().remove(selectedOwner);
                 showAlert("Owner deleted successfully");
             } catch (Exception e) {
