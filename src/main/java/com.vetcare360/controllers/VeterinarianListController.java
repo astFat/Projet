@@ -75,7 +75,6 @@ public class VeterinarianListController {
 
         if (confirm.showAndWait().get() == ButtonType.OK) {
             try {
-                // Since we don't have a direct delete method, we'll need to remove from the list
                 vetTable.getItems().remove(selectedVet);
                 showAlert("Veterinarian deleted successfully");
             } catch (Exception e) {
