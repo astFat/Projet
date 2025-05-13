@@ -54,7 +54,6 @@ public class FindOwnersController {
     }
 
     private String getCityFromAddress(String address) {
-        // Simple logic: city is last word(s) after last comma
         if (address == null) return "";
         String[] parts = address.split(",");
         return parts.length > 1 ? parts[parts.length-1].trim() : "";
