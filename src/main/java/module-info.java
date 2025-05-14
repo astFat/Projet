@@ -1,5 +1,4 @@
 module com.vetcare360 {
-    // JavaFX modules
     requires javafx.fxml;
     requires javafx.controls;
     requires transitive javafx.base;
