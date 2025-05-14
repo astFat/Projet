@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.*?>
+<VBox xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="com.vetcare360.controllers.VeterinarianListController" 
+      spacing="0" 
+      styleClass="page-bg"
+      minWidth="1280.0" minHeight="800.0" 
+      prefWidth="1280.0" prefHeight="800.0" 
+      maxWidth="1280.0" maxHeight="800.0">
+    
+    <fx:include source="Navbar.fxml"/>
+    
+    <VBox spacing="20" alignment="TOP_CENTER" style="-fx-padding: 30 40 40 40;">
+        <Label text="Veterinarians" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;"/>
+        
+        <TableView fx:id="vetTable" prefHeight="350" style="-fx-background-color: white;">
+            <columns>
+                <TableColumn fx:id="nameColumn" text="Name" prefWidth="200"/>
+                <TableColumn fx:id="specialtiesColumn" text="Specialties" prefWidth="300"/>
+            </columns>
+        </TableView>
+        
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Add New Veterinarian" onAction="#onAddClick" styleClass="nav-button"/>
+            <Button text="Edit Veterinarian" onAction="#onEditClick" styleClass="nav-button"/>
+            <Button text="Delete Veterinarian" onAction="#onDeleteClick" styleClass="nav-button"/>
+        </HBox>
+    </VBox>
+</VBox> 
