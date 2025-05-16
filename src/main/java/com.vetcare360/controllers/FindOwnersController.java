@@ -18,7 +18,6 @@ public class FindOwnersController {
     @FXML private TableView<Owner> ownersTable;
     @FXML private TableColumn<Owner, String> nameColumn;
     @FXML private TableColumn<Owner, String> addressColumn;
-    @FXML private TableColumn<Owner, String> cityColumn;
     @FXML private TableColumn<Owner, String> telephoneColumn;
     @FXML private TableColumn<Owner, String> petsColumn;
 
@@ -28,7 +27,6 @@ public class FindOwnersController {
     public void initialize() {
         nameColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getFullName()));
         addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
-        cityColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(getCityFromAddress(cellData.getValue().getAddress())));
         telephoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
         petsColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(getPetsString(cellData.getValue())));
         refreshTable(dataService.getAllOwners());
@@ -51,12 +49,6 @@ public class FindOwnersController {
     @FXML
     private void onAddOwnerClick() {
         Navigator.navigateTo("NewOwnerForm.fxml");
-    }
-
-    private String getCityFromAddress(String address) {
-        if (address == null) return "";
-        String[] parts = address.split(",");
-        return parts.length > 1 ? parts[parts.length-1].trim() : "";
     }
 
     private String getPetsString(Owner owner) {
