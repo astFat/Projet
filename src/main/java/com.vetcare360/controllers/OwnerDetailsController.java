@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 public class OwnerDetailsController {
     @FXML private Label nameLabel;
     @FXML private Label addressLabel;
-    @FXML private Label cityLabel;
     @FXML private Label telephoneLabel;
     @FXML private TableView<Pet> petsTable;
     @FXML private TableColumn<Pet, String> petNameColumn;
@@ -45,7 +44,6 @@ public class OwnerDetailsController {
         this.currentOwner = owner;
         nameLabel.setText(owner.getFullName());
         addressLabel.setText(owner.getAddress());
-        cityLabel.setText(getCityFromAddress(owner.getAddress()));
         telephoneLabel.setText(owner.getPhone());
         setupPetsTable(owner);
     }
@@ -60,12 +58,6 @@ public class OwnerDetailsController {
                 .collect(Collectors.toList());
         ObservableList<Pet> list = FXCollections.observableArrayList(pets);
         petsTable.setItems(list);
-    }
-
-    private String getCityFromAddress(String address) {
-        if (address == null) return "";
-        String[] parts = address.split(",");
-        return parts.length > 1 ? parts[parts.length-1].trim() : "";
     }
 
     private String getVisitsString(Pet pet) {
