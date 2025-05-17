@@ -72,8 +72,9 @@ public class AppointmentsViewController {
         confirm.setHeaderText(null);
         Optional<ButtonType> result = confirm.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.YES) {
-            dataService.getAllVisits().remove(selected);
+            dataService.deleteVisit(selected);
             refreshTable();
+            showAlert("Appointment deleted successfully.");
         }
     }
 
