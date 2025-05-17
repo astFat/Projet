@@ -92,4 +92,7 @@ public class DataService {
                 .findFirst()
                 .orElse(null);
     }
+    public void deleteVisit(Visit visit) {
+        visits.remove(visit);
+    }
 }
