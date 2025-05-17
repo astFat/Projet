@@ -8,6 +8,7 @@ import com.vetcare360.utils.Navigator;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class VisitFormController {
     @FXML private ComboBox<Pet> petComboBox;
@@ -16,7 +17,6 @@ public class VisitFormController {
     @FXML private TextField timeField;
     @FXML private TextArea reasonField;
     @FXML private TextArea diagnosisArea;
-
     private DataService dataService;
     public static Visit editVisit;
 
@@ -76,47 +76,59 @@ public class VisitFormController {
 
     @FXML
     private void onSaveClick() {
-        if (petComboBox.getValue() == null || vetComboBox.getValue() == null ||
-            datePicker.getValue() == null || timeField.getText().isEmpty() ||
-            reasonField.getText().isEmpty()) {
-            showAlert("All fields must be filled");
-            return;
-        }
+            LocalDateTime dateTime;
+            try {
+                String[] timeParts = timeField.getText().trim().split(":");
+                if (timeParts.length != 2) {
+                    throw new NumberFormatException("Invalid time format");
+                }
+                int hour = Integer.parseInt(timeParts[0].trim());
+                int minute = Integer.parseInt(timeParts[1].trim());
+                
+                if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+                    throw new NumberFormatException("Invalid time");
+                }
+                
+                dateTime = LocalDateTime.of(
+                    datePicker.getValue(),
+                    java.time.LocalTime.of(hour, minute)
+                );
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                showAlert("Entre une heure valide HH:MM format (exemple, 14:30)");
+                return;
+            }
 
-        try {
-            String[] timeParts = timeField.getText().split(":");
-            int hour = Integer.parseInt(timeParts[0]);
-            int minute = Integer.parseInt(timeParts[1]);
-            LocalDateTime dateTime = LocalDateTime.of(
-                datePicker.getValue(),
-                java.time.LocalTime.of(hour, minute)
-            );
             Pet selectedPet = petComboBox.getValue();
             Veterinarian selectedVet = vetComboBox.getValue();
+            String vetFullName = selectedVet.getFirstName() + " " + selectedVet.getLastName();
+            String diagnosis = diagnosisArea.getText() != null ? diagnosisArea.getText() : "";
 
             if (editVisit != null) {
                 editVisit.setPetName(selectedPet.getName());
-                editVisit.setVetName(selectedVet.getFirstName() + " " + selectedVet.getLastName());
+                editVisit.setVetName(vetFullName);
                 editVisit.setDateTime(dateTime);
-                editVisit.setReason(reasonField.getText());
-                editVisit.setDiagnosis(diagnosisArea.getText());
+                editVisit.setReason(reasonField.getText().trim());
+                editVisit.setDiagnosis(diagnosis);
                 showAlert("Visit updated successfully");
                 editVisit = null;
             } else {
-                Visit visit = new Visit(0,
+                dataService.addVisit(
                     selectedPet.getName(),
-                    selectedVet.getFirstName() + " " + selectedVet.getLastName(),
+                    vetFullName,
                     dateTime,
-                    reasonField.getText()
+                    reasonField.getText().trim()
                 );
-                visit.setDiagnosis(diagnosisArea.getText());
-                dataService.getAllVisits().add(visit);
+                List<Visit> allVisits = dataService.getAllVisits();
+                if (!allVisits.isEmpty()) {
+                    Visit lastVisit = allVisits.get(allVisits.size() - 1);
+                    lastVisit.setDiagnosis(diagnosis);
+                }
                 showAlert("Visit added successfully");
             }
+            
             Navigator.navigateTo("AppointmentsView.fxml");
-        } catch (Exception e) {
-            showAlert("Error adding/updating visit: " + e.getMessage());
-        }
+
+
     }
 
     private void showAlert(String message) {
@@ -126,4 +138,4 @@ public class VisitFormController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-} 
+}
