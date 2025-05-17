@@ -7,9 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.layout.VBox;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
@@ -31,7 +29,14 @@ public class AppointmentsViewController {
             cellData.getValue().getDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))));
         reasonColumn.setCellValueFactory(new PropertyValueFactory<>("reason"));
         diagnosisColumn.setCellValueFactory(new PropertyValueFactory<>("diagnosis"));
+        
         refreshTable();
+        
+        visitTable.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                refreshTable();
+            }
+        });
     }
 
     private void refreshTable() {
@@ -40,51 +45,10 @@ public class AppointmentsViewController {
     }
 
     @FXML
-    private void onAddClick() {
-        Dialog<Visit> dialog = new Dialog<>();
-        dialog.setTitle("Add Appointment");
-        dialog.setHeaderText("Enter appointment details");
-        ButtonType addButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
-
-        TextField petNameField = new TextField();
-        petNameField.setPromptText("Pet Name (e.g. Max)");
-        TextField vetNameField = new TextField();
-        vetNameField.setPromptText("Veterinarian (e.g. John Smith)");
-        TextField dateTimeField = new TextField();
-        dateTimeField.setPromptText("Date & Time (yyyy-MM-dd HH:mm)");
-        TextField reasonField = new TextField();
-        reasonField.setPromptText("Reason");
-        TextField diagnosisField = new TextField();
-        diagnosisField.setPromptText("Diagnosis");
-
-        VBox content = new VBox(8, new Label("Pet Name:"), petNameField,
-                new Label("Veterinarian:"), vetNameField,
-                new Label("Date & Time:"), dateTimeField,
-                new Label("Reason:"), reasonField,
-                new Label("Diagnosis:"), diagnosisField);
-        dialog.getDialogPane().setContent(content);
-
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == addButtonType) {
-                try {
-                    LocalDateTime dateTime = LocalDateTime.parse(dateTimeField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-                    Visit visit = new Visit(0, petNameField.getText(), vetNameField.getText(), dateTime, reasonField.getText());
-                    visit.setDiagnosis(diagnosisField.getText());
-                    return visit;
-                } catch (Exception e) {
-                    showAlert("Invalid date/time format. Use yyyy-MM-dd HH:mm");
-                }
-            }
-            return null;
-        });
-
-        Optional<Visit> result = dialog.showAndWait();
-        result.ifPresent(visit -> {
-            dataService.getAllVisits().add(visit);
-            refreshTable();
-        });
+    private void onAddVisitClick() {
+        com.vetcare360.utils.Navigator.navigateTo("AddVisitForm.fxml");
     }
+
 
     @FXML
     private void onEditClick() {
@@ -96,7 +60,6 @@ public class AppointmentsViewController {
         com.vetcare360.controllers.VisitFormController.editVisit = selected;
         com.vetcare360.utils.Navigator.navigateTo("AddVisitForm.fxml");
     }
-
     @FXML
     private void onDeleteClick() {
         Visit selected = visitTable.getSelectionModel().getSelectedItem();
@@ -114,11 +77,6 @@ public class AppointmentsViewController {
         }
     }
 
-    @FXML
-    private void onAddVisitClick() {
-        com.vetcare360.utils.Navigator.navigateTo("AddVisitForm.fxml");
-    }
-
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Information");
@@ -126,4 +84,4 @@ public class AppointmentsViewController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-} 
+}
