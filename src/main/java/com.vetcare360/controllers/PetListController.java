@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.util.List;
+
 public class PetListController {
     @FXML private TableView<Pet> petTable;
     @FXML private TableColumn<Pet, String> nameColumn;
@@ -16,7 +18,6 @@ public class PetListController {
     @FXML private TableColumn<Pet, String> ownerColumn;
 
     private DataService dataService;
-    private Pet selectedPet;
 
     @FXML
     public void initialize() {
@@ -41,7 +42,11 @@ public class PetListController {
 
     private void refreshTable() {
         petTable.getItems().clear();
-        petTable.getItems().addAll(dataService.getAllPets());
+        
+        List<Pet> allPets = dataService.getAllPets();
+        for (Pet pet : allPets) {
+            petTable.getItems().add(pet);
+        }
     }
 
     @FXML
@@ -95,4 +100,4 @@ public class PetListController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-} 
+}
