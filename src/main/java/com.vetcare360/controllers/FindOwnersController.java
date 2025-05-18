@@ -11,7 +11,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class FindOwnersController {
     @FXML private TextField lastNameField;
@@ -40,9 +39,15 @@ public class FindOwnersController {
     @FXML
     private void onFindOwnerClick() {
         String lastName = lastNameField.getText().trim().toLowerCase();
-        List<Owner> filtered = dataService.getAllOwners().stream()
-                .filter(o -> o.getLastName().toLowerCase().contains(lastName))
-                .collect(Collectors.toList());
+        List<Owner> allOwners = dataService.getAllOwners();
+        List<Owner> filtered = FXCollections.observableArrayList();
+        
+        for (Owner owner : allOwners) {
+            if (owner.getLastName().toLowerCase().contains(lastName)) {
+                filtered.add(owner);
+            }
+        }
+        
         refreshTable(filtered);
     }
 
@@ -52,9 +57,23 @@ public class FindOwnersController {
     }
 
     private String getPetsString(Owner owner) {
-        List<Pet> pets = dataService.getAllPets().stream()
-                .filter(p -> p.getOwnerName().equals(owner.getFullName()))
-                .collect(Collectors.toList());
-        return pets.stream().map(Pet::getName).collect(Collectors.joining(", "));
+        List<Pet> allPets = dataService.getAllPets();
+        List<Pet> ownerPets = FXCollections.observableArrayList();
+        
+        for (Pet pet : allPets) {
+            if (pet.getOwnerName().equals(owner.getFullName())) {
+                ownerPets.add(pet);
+            }
+        }
+        
+        String petNames = "";
+        for (int i = 0; i < ownerPets.size(); i++) {
+            petNames += ownerPets.get(i).getName();
+            if (i < ownerPets.size() - 1) {
+                petNames += ", ";
+            }
+        }
+        
+        return petNames;
     }
-} 
+}
