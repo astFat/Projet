@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.vetcare360.controllers.OwnerDetailsController"
+      minWidth="1280.0" minHeight="800.0" prefWidth="1280.0" prefHeight="800.0" maxWidth="1280.0" maxHeight="800.0"
+      spacing="15" style="-fx-background-color: #f5f5f5;" VBox.vgrow="ALWAYS">
+
+    <fx:include source="Navbar.fxml"/>
+
+    <VBox spacing="20" alignment="TOP_CENTER" style="-fx-padding: 30 40 40 40; -fx-background-color: white; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
+        <Label text="Owner Information"
+               style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+        <GridPane hgap="20" vgap="15" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 10;">
+            <Label text="Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+            <Label fx:id="nameLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                   style="-fx-font-weight: normal; -fx-text-fill: #2c3e50;"/>
+
+            <Label text="Address:" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+            <Label fx:id="addressLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                   style="-fx-font-weight: normal; -fx-text-fill: #2c3e50;"/>
+
+            <Label text="Telephone:" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+            <Label fx:id="telephoneLabel" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                   style="-fx-font-weight: normal; -fx-text-fill: #2c3e50;"/>
+        </GridPane>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Button text="Edit Owner" onAction="#onEditOwnerClick"
+                    style="-fx-background-color: #051c26; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;"/>
+            <Button text="Add New Pet" onAction="#onAddPetClick"
+                    style="-fx-background-color: #0d3752; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15;"/>
+        </HBox>
+
+        <Label text="Pets and Visits" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-padding: 20 0 10 0;"/>
+
+        <TableView fx:id="petsTable" prefHeight="250"
+                   style="-fx-background-color: white; -fx-background-radius: 5;">
+            <columns>
+                <TableColumn fx:id="petNameColumn" text="Name" prefWidth="150"/>
+                <TableColumn fx:id="petBirthDateColumn" text="Birth Date" prefWidth="150"/>
+                <TableColumn fx:id="petTypeColumn" text="Type" prefWidth="120"/>
+                <TableColumn fx:id="petVisitsColumn" text="Visits" prefWidth="400"/>
+            </columns>
+        </TableView>
+    </VBox>
+</VBox>
