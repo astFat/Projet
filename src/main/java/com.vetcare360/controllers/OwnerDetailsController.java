@@ -12,7 +12,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class OwnerDetailsController {
     @FXML private Label nameLabel;
@@ -53,18 +52,40 @@ public class OwnerDetailsController {
         petBirthDateColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty("N/A"));
         petTypeColumn.setCellValueFactory(new PropertyValueFactory<>("species"));
         petVisitsColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(getVisitsString(cellData.getValue())));
-        List<Pet> pets = dataService.getAllPets().stream()
-                .filter(p -> p.getOwnerName().equals(owner.getFullName()))
-                .collect(Collectors.toList());
-        ObservableList<Pet> list = FXCollections.observableArrayList(pets);
+        
+        List<Pet> allPets = dataService.getAllPets();
+        List<Pet> ownerPets = FXCollections.observableArrayList();
+        
+        for (Pet pet : allPets) {
+            if (pet.getOwnerName().equals(owner.getFullName())) {
+                ownerPets.add(pet);
+            }
+        }
+        
+        ObservableList<Pet> list = FXCollections.observableArrayList(ownerPets);
         petsTable.setItems(list);
     }
 
     private String getVisitsString(Pet pet) {
-        List<Visit> visits = dataService.getAllVisits().stream()
-                .filter(v -> v.getPetName().equals(pet.getName()))
-                .collect(Collectors.toList());
-        return visits.stream().map(v -> v.getDateTime().toLocalDate() + ": " + v.getReason()).collect(Collectors.joining("; "));
+        List<Visit> allVisits = dataService.getAllVisits();
+        List<Visit> petVisits = FXCollections.observableArrayList();
+        
+        for (Visit visit : allVisits) {
+            if (visit.getPetName().equals(pet.getName())) {
+                petVisits.add(visit);
+            }
+        }
+        
+        String visitsInfo = "";
+        for (int i = 0; i < petVisits.size(); i++) {
+            Visit visit = petVisits.get(i);
+            visitsInfo += visit.getDateTime().toLocalDate() + ": " + visit.getReason();
+            if (i < petVisits.size() - 1) {
+                visitsInfo += "; ";
+            }
+        }
+        
+        return visitsInfo;
     }
 
     @FXML
@@ -76,4 +97,4 @@ public class OwnerDetailsController {
     private void onAddPetClick() {
         Navigator.navigateTo("NewPetForm.fxml");
     }
-} 
+}
